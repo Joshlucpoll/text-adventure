@@ -6,7 +6,7 @@ class Room():
         self.name = room_name
         self.description = description
         self.linked_rooms = {}
-        self.subrooms = {}
+        self.subrooms = []
     
     def set_name(self, room_name):
         self.name = room_name
@@ -30,12 +30,12 @@ class Room():
         self.subrooms[subroom_name] = Subroom(subroom_name, subroom_description)
 
     def get_details(self):
-        
+        #displays current room, description; linked rooms the player can travel to and subrooms inside current room
         print("\n----------------\n" + self.name + "\n----------------")
         time.sleep(0.5)
         print("Description:\n" + self.description + "\n")
         
-        if len(self.subrooms.items()) != 0:
+        if len(self.subrooms) != 0:
             time.sleep(0.5)
             print("\n'Inspect':")
             count = 1
@@ -50,6 +50,7 @@ class Room():
             print("\t(" + str(direction).capitalize() + ")\t" + room.get_name())
 
     def _move(self, direction):
+        
         if direction in self.linked_rooms:
             return self.linked_rooms[direction]
         else:
@@ -69,29 +70,24 @@ class Subroom(Room):
 
 class Character():
 
-    # Create a character
     def __init__(self, char_name, char_description):
         self.name = char_name
         self.description = char_description
         self.conversation = None
 
-    # Describe this character
     def describe(self):
         print(self.name + " is here!")
         print(self.description)
 
-    # Set what this character will say when talked to
     def set_conversation(self, conversation):
         self.conversation = conversation
 
-    # Talk to this character
     def talk(self):
         if self.conversation is not None:
             print("[" + self.name + " says]: " + self.conversation)
         else:
             print(self.name + " doesn't want to talk to you")
 
-    # Fight with this character
     def fight(self, combat_item):
         print(self.name + " doesn't want to fight with you")
         return True
