@@ -18,6 +18,8 @@ dining_room.link_room(ballroom, "west")
 
 ballroom.link_room(dining_room, "east")
 
+kitchen.set_subroom("Stove", "There is an old saucepan on the hob, it's greasy")
+
 mgr.set_current_room(kitchen)
 
 #create characters

@@ -30,7 +30,7 @@ class Room():
         self.linked_rooms[direction] = room_to_link
 
     def set_subroom(self, subroom_name, subroom_description):
-        self.subrooms[subroom_name] = Subroom(subroom_name, subroom_description)
+        self.subrooms.append( [subroom_name, Subroom(subroom_name, subroom_description)] )
 
     def get_details(self):
         #displays current room, description; linked rooms the player can travel to and subrooms inside current room
@@ -39,33 +39,26 @@ class Room():
         
         if len(self.subrooms) != 0:
             print("\n'Inspect':")
+            for i in range(len(self.subrooms)):
+                print("(" + str(i+1) + ")  " + self.subrooms[i][0])
             count = 1
-            for key, value in self.subrooms.items():
-                print("(" + str(count) + ")  " + key)
-                count += 1
         
         print("\n'Go':")
         for direction in self.linked_rooms:
             room = self.linked_rooms[direction]
             print("\t(" + str(direction).capitalize() + ")\t" + room.get_name())
+        
 
-    def _move(self, direction):
-        if direction in self.linked_rooms:
-            return self.linked_rooms[direction]
-        else:
-            print("You can't go that way")
-            time.sleep(1)
-            return self
+class Subroom():
     
-    def _inspectSubroom(self, sunroom):
-        return
-
-class Subroom(Room):
-
-    def __init__(self, room_name, description):
-        super().__init__(room_name, description)
-        self.linked_subrooms = None
+    def __init__(self, subroom_name, description):
+        self.subroom_name = subroom_name
+        self.description = description
     
+    def describe(self):
+        print("\n" + self.subroom_name + "\n----------------")
+        print(self.description)
+        print("----------------\n")
 
 class Character():
 
@@ -96,8 +89,8 @@ class Character():
 
 class Enemy(Character):
 
-    def __init__(self, char_name, char_description):
-        super().__init__(char_name, char_description)
+    def __init__(self, char_name, char_description, manager):
+        super().__init__(char_name, char_description, manager)
         self.weakness = None
 
     def get_weakness(self):
