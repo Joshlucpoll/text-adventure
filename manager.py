@@ -7,10 +7,16 @@ class Manager():
         self.current_room = None
         self.current_subroom = None
         self.health = 5#self.set_difficulty()
-        self.inventory = []
+        self.hunger = None
+        self.inventory = {}
         self.rooms = {}
         self.characters = {}
         self.enemies = {}
+
+        # adds manager to objects as class variables
+        Room.mgr = self
+        Character.mgr = self
+        Item.mgr = self
 
     # health functions
     
@@ -75,6 +81,16 @@ class Manager():
         else:
             self.enemies.update({char_name:char})
 
+    # item functions
+    
+    def _get_inventory(self):
+        items = []
+        for item in self.inventory.values():
+            items.append(item)
+        return items
+
+    def add_item(self, item_name, item):
+        self.inventory.update({item_name:item})
 
     # command functions
     
@@ -119,16 +135,23 @@ class Manager():
         self.current_room = self.current_room._move(direction)
         
     def _inspect_subroom(self):
-        subroom = int(self.command.split(' ' , 1)[1].lower()) - 1
-        if subroom <= len(self.current_room.subrooms):
-            time.sleep(0.5)
-            self.current_room.subrooms[subroom][1].describe()
-            self.current_subroom = self.current_room.subrooms[subroom][0]
-    
+        subroom = int(self.command.split(' ' , 1)[1].lower())
+        if subroom <= len(self.current_room.subrooms) and subroom > 0:
+            count = 1
+            for key, value in self.current_room.subrooms.items():
+                if count == subroom:
+                    self.current_room.subrooms.get(key).describe()
+                    self.current_subroom = self.current_room.subrooms.get(key)
+                count += 1
+
     def _return(self):
-        print("You step back from the " + self.current_subroom)
+        print("You step back from the " + str(self.current_subroom.get_name()))
         self.current_subroom = None
         time.sleep(0.5)
+
+    def _view_inventory(self):
+        items = self._get_inventory()
+
 
 
     def mainloop(self):
@@ -140,4 +163,3 @@ class Manager():
 
             command = input("> ")
             self.input_command(command)
-
